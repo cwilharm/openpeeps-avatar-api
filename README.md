@@ -1,6 +1,6 @@
 # Open Peeps Avatar Generator API
 
-A simple FastAPI application for building customizable profile picture avatars by combining face components. Includes a ready-to-use Web Component for easy frontend integration.
+A simple FastAPI application for building customizable profile picture avatars by combining Open Peeps face components. Includes a ready-to-use Web Component for easy frontend integration.
 
 ## Features
 
