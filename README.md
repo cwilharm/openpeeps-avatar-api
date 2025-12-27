@@ -313,21 +313,12 @@ const avatar = await fetch('http://localhost:8000/avatar/generate', {
 document.getElementById('avatar-container').innerHTML = avatar.svg;
 ```
 
-## Testing
-
-Run the test suite:
-```bash
-python test_api.py
-```
-
 ## Files
 
 - `main.py` - FastAPI backend application
 - `avatar-builder.js` - Web Component for frontend integration
 - `component-demo.html` - Interactive demo page
-- `playground.html` - Full-featured playground with grid selection
 - `requirements.txt` - Python dependencies
-- `test_api.py` - API test suite
 
 ## Notes
 
