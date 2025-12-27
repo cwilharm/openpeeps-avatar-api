@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar Generator Playground</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .selector-area {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .category {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-selected {
+            font-size: 14px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+        }
+
+        .option-card {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .option-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .option-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .option-preview {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .option-preview svg {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+        }
+
+        .option-name {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            font-weight: 500;
+            line-height: 1.2;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .preview-panel {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .avatar-container {
+            width: 100%;
+            aspect-ratio: 1136 / 1533;
+            background: #f8f9fa;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid #e0e0e0;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .avatar-container.loaded {
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .avatar-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .placeholder {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .key-display {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            text-align: center;
+            border: 2px dashed #e0e0e0;
+            margin-bottom: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-random {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-random:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-download:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: inline-block;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: 2px solid #fcc;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-panel {
+                position: static;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .options-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 8px;
+            }
+
+            .option-preview {
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Avatar Generator</h1>
+            <p class="subtitle">Click on images to customize your avatar</p>
+        </div>
+
+        <div id="error" style="display: none;"></div>
+
+        <div class="main-layout">
+            <div class="selector-area" id="selectorArea">
+                <div class="placeholder">Loading options...</div>
+            </div>
+
+            <div class="preview-panel">
+                <div class="avatar-container" id="avatarContainer">
+                    <div class="placeholder">
+                        <p>👈 Select options to build your avatar</p>
+                    </div>
+                </div>
+
+                <div class="key-display" id="keyDisplay">
+                    No avatar generated yet
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-random" onclick="generateRandom()">
+                        🎲 Random Avatar
+                    </button>
+                    <button class="btn-download" onclick="downloadAvatar()" id="downloadBtn" disabled>
+                        💾 Download SVG
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let currentAvatarData = null;
+        let allOptions = {};
+        let selection = {
+            head: 0,
+            face: 0,
+            body: 0,
+            facial_hair: 0,
+            accessories: 0
+        };
+
+        // Category display names
+        const categoryNames = {
+            head: '💇 Hair / Head',
+            face: '😊 Face Expression',
+            body: '👔 Body / Clothing',
+            'facial-hair': '🧔 Facial Hair',
+            accessories: '🕶️ Accessories'
+        };
+
+        // Load options on page load
+        async function loadOptions() {
+            try {
+                const response = await fetch(`${API_BASE}/options`);
+                const data = await response.json();
+                allOptions = data.categories;
+
+                renderSelectors();
+                generateAvatar(); // Auto-generate with defaults
+            } catch (error) {
+                showError('Failed to load options. Make sure the API server is running on port 8000.');
+            }
+        }
+
+        // Render all category selectors
+        function renderSelectors() {
+            const container = document.getElementById('selectorArea');
+            container.innerHTML = '';
+
+            for (const [category, options] of Object.entries(allOptions)) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+
+                const categoryKey = category.replace('-', '_');
+                const selectedOption = options.find(opt => opt.id === selection[categoryKey]);
+
+                categoryDiv.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-title">${categoryNames[category]}</div>
+                        <div class="category-selected">${selectedOption ? selectedOption.name : ''}</div>
+                    </div>
+                    <div class="options-grid" id="grid-${categoryKey}">
+                        ${options.map(opt => `
+                            <div class="option-card ${opt.id === selection[categoryKey] ? 'selected' : ''}"
+                                 onclick="selectOption('${categoryKey}', ${opt.id})">
+                                <div class="option-preview" id="preview-${categoryKey}-${opt.id}">
+                                    <div class="loading">...</div>
+                                </div>
+                                <div class="option-name">${opt.name}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                container.appendChild(categoryDiv);
+
+                // Load SVG previews
+                options.forEach(opt => loadPreview(category, opt));
+            }
+        }
+
+        // Load individual SVG preview
+        async function loadPreview(category, option) {
+            try {
+                const categoryKey = category.replace('-', '_');
+                const path = `Separate Atoms/${category}/${option.name}.svg`;
+                const response = await fetch(path);
+                const svgText = await response.text();
+
+                const previewElement = document.getElementById(`preview-${categoryKey}-${option.id}`);
+                if (previewElement) {
+                    previewElement.innerHTML = svgText;
+                }
+            } catch (error) {
+                // Silently fail for missing previews
+                const previewElement = document.getElementById(`preview-${category.replace('-', '_')}-${option.id}`);
+                if (previewElement) {
+                    previewElement.innerHTML = '<div style="font-size: 10px; color: #999;">No preview</div>';
+                }
+            }
+        }
+
+        // Select an option
+        function selectOption(category, optionId) {
+            selection[category] = optionId;
+            renderSelectors();
+            generateAvatar();
+        }
+
+        // Generate avatar with current selection
+        async function generateAvatar() {
+            try {
+                showLoading();
+                const response = await fetch(`${API_BASE}/avatar/generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(selection)
+                });
+
+                const data = await response.json();
+                displayAvatar(data);
+            } catch (error) {
+                showError('Failed to generate avatar. Please check your connection.');
+            }
+        }
+
+        // Generate random avatar
+        async function generateRandom() {
+            try {
+                showLoading();
+                const response = await fetch(`${API_BASE}/avatar/random`);
+                const data = await response.json();
+                displayAvatar(data);
+
+                // Update selection to random values
+                for (const category in selection) {
+                    const options = allOptions[category.replace('_', '-')];
+                    selection[category] = Math.floor(Math.random() * options.length);
+                }
+                renderSelectors();
+            } catch (error) {
+                showError('Failed to generate random avatar. Please check your connection.');
+            }
+        }
+
+        // Display avatar
+        function displayAvatar(data) {
+            currentAvatarData = data;
+            const container = document.getElementById('avatarContainer');
+            container.innerHTML = data.svg;
+            container.classList.add('loaded');
+
+            document.getElementById('keyDisplay').textContent = `Key: ${data.key}`;
+            document.getElementById('downloadBtn').disabled = false;
+            hideError();
+        }
+
+        // Download avatar
+        function downloadAvatar() {
+            if (!currentAvatarData) return;
+
+            const blob = new Blob([currentAvatarData.svg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `avatar_${currentAvatarData.key}.svg`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Show loading state
+        function showLoading() {
+            const keyDisplay = document.getElementById('keyDisplay');
+            keyDisplay.innerHTML = '<span class="loading">Generating...</span>';
+        }
+
+        // Show error
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.className = 'error';
+            errorDiv.style.display = 'block';
+        }
+
+        // Hide error
+        function hideError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Initialize
+        loadOptions();
+    </script>
+</body>
+</html>

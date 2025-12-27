@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Peeps API - Avatar Builder Component</title>
+    <style>
+        :root {
+            --accent: #ff90e8;
+            --pink: #ff90e8;
+            --purple: #90a8ed;
+            --green: #23a094;
+            --orange: #ffc900;
+            --red: #dc341e;
+            --yellow: #f1f333;
+            --body-bg: #f4f4f0;
+            --success: 35 160 148;
+            --warning: 255 201 0;
+            --danger: 220 52 30;
+            --info: 144 168 237;
+            --primary: 0 0 0;
+            --color: 0 0 0;
+            --filled: 255 255 255;
+            --contrast-accent: 0 0 0;
+            --text-sm: 0.875rem;
+            --text-sm--line-height: 1.25;
+            --text-base: 1rem;
+            --text-base--line-height: 1.5;
+            --text-xl: 1.25rem;
+            --text-xl--line-height: 1.75;
+            --text-2xl: 1.5rem;
+            --text-2xl--line-height: 2;
+            --text-3xl: 1.875rem;
+            --text-3xl--line-height: 2.25;
+            --spacer-1: 0.25rem;
+            --spacer-2: 0.5rem;
+            --spacer-3: 0.75rem;
+            --spacer-4: 1rem;
+            --spacer-5: 1.5rem;
+            --spacer-6: 2rem;
+            --spacer-8: 3rem;
+            --border-radius-1: 0.25rem;
+            --border-radius-2: 0.5rem;
+            --border-radius-3: 10rem;
+            --box-shadow-1: 0.25rem 0.25rem 0 rgb(var(--color));
+            --box-shadow-2: 0.5rem 0.5rem 0 rgb(var(--color));
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Satoshi', Arial, sans-serif;
+            font-size: var(--text-base);
+            line-height: var(--text-base--line-height);
+            color: rgb(var(--color));
+            background-color: var(--body-bg);
+        }
+
+        h1 {
+            font-size: var(--text-3xl);
+            line-height: var(--text-3xl--line-height);
+            margin-bottom: var(--spacer-4);
+        }
+
+        h2 {
+            font-size: var(--text-2xl);
+            line-height: var(--text-2xl--line-height);
+            margin-bottom: var(--spacer-3);
+        }
+
+        h3 {
+            font-size: var(--text-xl);
+            line-height: var(--text-xl--line-height);
+            margin-bottom: var(--spacer-3);
+        }
+
+        p {
+            margin-bottom: var(--spacer-3);
+        }
+
+        .text-sm {
+            font-size: var(--text-sm);
+            line-height: var(--text-sm--line-height);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacer-6);
+        }
+
+        .hero {
+            background: var(--accent);
+            color: rgb(var(--contrast-accent));
+            padding: var(--spacer-8);
+            text-align: center;
+            border-radius: var(--border-radius-2);
+            border: 2px solid rgb(var(--color));
+            box-shadow: var(--box-shadow-2);
+            margin-bottom: var(--spacer-6);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: var(--spacer-3);
+        }
+
+        .hero p {
+            font-size: var(--text-xl);
+            margin-bottom: var(--spacer-5);
+        }
+
+        .hero-link {
+            color: rgb(var(--contrast-accent));
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        .hero-link:hover {
+            opacity: 0.8;
+        }
+
+        .section {
+            margin-bottom: var(--spacer-8);
+        }
+
+        .section-title {
+            font-size: var(--text-3xl);
+            margin-bottom: var(--spacer-4);
+            padding-bottom: var(--spacer-3);
+            border-bottom: 2px solid rgb(var(--color));
+        }
+
+        .demo-grid {
+            display: grid;
+            gap: var(--spacer-4);
+            margin-bottom: var(--spacer-5);
+        }
+
+        @media (min-width: 900px) {
+            .demo-grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .demo-box {
+            padding: var(--spacer-5);
+            background: white;
+            border: 2px solid rgb(var(--color));
+            border-radius: var(--border-radius-2);
+            box-shadow: var(--box-shadow-1);
+        }
+
+        .code-block {
+            background: rgb(var(--color));
+            color: rgb(var(--filled));
+            padding: var(--spacer-4);
+            border-radius: var(--border-radius-2);
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: var(--text-sm);
+            line-height: 1.6;
+            margin-bottom: var(--spacer-3);
+        }
+
+        .code-block .comment {
+            color: var(--green);
+        }
+
+        .code-block .string {
+            color: var(--yellow);
+        }
+
+        .code-block .keyword {
+            color: var(--accent);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacer-4);
+            margin-top: var(--spacer-5);
+        }
+
+        .feature-card {
+            background: white;
+            padding: var(--spacer-5);
+            border-radius: var(--border-radius-2);
+            border: 2px solid rgb(var(--color));
+            box-shadow: var(--box-shadow-1);
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacer-3);
+        }
+
+        .feature-card h3 {
+            margin-bottom: var(--spacer-2);
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: rgb(var(--color) / 0.7);
+        }
+
+        .endpoint-card {
+            background: white;
+            padding: var(--spacer-4);
+            border-radius: var(--border-radius-2);
+            border: 2px solid rgb(var(--color));
+            box-shadow: var(--box-shadow-1);
+            margin-bottom: var(--spacer-4);
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: var(--spacer-1) var(--spacer-3);
+            border-radius: var(--border-radius-3);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            margin-bottom: var(--spacer-2);
+            border: 2px solid rgb(var(--color));
+        }
+
+        .method-get {
+            background: var(--green);
+            color: white;
+        }
+
+        .method-post {
+            background: var(--purple);
+            color: white;
+        }
+
+        .endpoint-path {
+            font-family: monospace;
+            font-size: var(--text-base);
+            font-weight: 600;
+            margin-bottom: var(--spacer-3);
+        }
+
+        .event-log {
+            background: var(--body-bg);
+            padding: var(--spacer-4);
+            border-radius: var(--border-radius-2);
+            max-height: 250px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: var(--text-sm);
+            border: 2px solid rgb(var(--color) / 0.1);
+        }
+
+        .event-log-item {
+            padding: var(--spacer-2) 0;
+            border-bottom: 1px solid rgb(var(--color) / 0.1);
+        }
+
+        .event-log-item:last-child {
+            border-bottom: none;
+        }
+
+        .timestamp {
+            color: rgb(var(--color) / 0.5);
+            margin-right: var(--spacer-2);
+        }
+
+        .key {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: var(--spacer-6);
+            margin-top: var(--spacer-8);
+            border-top: 2px solid rgb(var(--color) / 0.2);
+        }
+
+        footer p {
+            margin: 0;
+            color: rgb(var(--color) / 0.6);
+        }
+
+        footer a {
+            color: rgb(var(--color));
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: var(--text-base);
+            }
+
+            .container {
+                padding: var(--spacer-4);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Open Peeps API</h1>
+            <p>Build customizable avatar profile pictures with a simple API</p>
+            <p class="text-sm">
+                API: <a href="http://localhost:8000" target="_blank" class="hero-link">http://localhost:8000</a> |
+                Docs: <a href="http://localhost:8000/docs" target="_blank" class="hero-link">Swagger UI</a>
+            </p>
+            <p class="text-sm">
+                Thanks to <a href="https://www.openpeeps.com/" target="_blank" class="hero-link">openpeeps.com</a>
+                for providing these resources under a free license
+            </p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Live Demo</h2>
+            <div class="demo-grid demo-grid-2">
+                <div class="demo-box">
+                    <h3>Interactive Avatar Builder</h3>
+                    <p class="text-sm" style="margin-bottom: var(--spacer-4); color: rgb(var(--color) / 0.7);">
+                        Use the stepper controls to customize your avatar
+                    </p>
+                    <avatar-builder api-url="http://localhost:8000"></avatar-builder>
+                </div>
+
+                <div class="demo-box">
+                    <h3>Event Log</h3>
+                    <p class="text-sm" style="margin-bottom: var(--spacer-4); color: rgb(var(--color) / 0.7);">
+                        Watch events as avatars are generated
+                    </p>
+                    <div class="event-log" id="eventLog">
+                        <div style="color: rgb(var(--color) / 0.5); font-style: italic;">
+                            Events will appear here...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Quick Start</h2>
+
+            <h3>1. Include the script</h3>
+            <div class="code-block">
+<span class="comment">// Add to your HTML</span>
+&lt;script src="avatar-builder.js"&gt;&lt;/script&gt;
+            </div>
+
+            <h3>2. Use the component</h3>
+            <div class="code-block">
+<span class="comment">// Add the Web Component</span>
+&lt;avatar-builder api-url="http://localhost:8000"&gt;&lt;/avatar-builder&gt;
+            </div>
+
+            <h3>3. Listen to events (optional)</h3>
+            <div class="code-block">
+<span class="keyword">const</span> builder = document.querySelector(<span class="string">'avatar-builder'</span>);
+
+builder.addEventListener(<span class="string">'avatar-generated'</span>, (event) => {
+  console.log(<span class="string">'Key:'</span>, event.detail.key);
+  console.log(<span class="string">'SVG:'</span>, event.detail.svg);
+});
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">API Endpoints</h2>
+
+            <div class="endpoint-card">
+                <span class="endpoint-method method-get">GET</span>
+                <div class="endpoint-path">/options</div>
+                <p class="text-sm" style="margin-bottom: var(--spacer-3); color: rgb(var(--color) / 0.7);">
+                    Returns all available component options for each category
+                </p>
+                <div class="code-block" style="margin: 0;">
+<span class="comment">// No parameters required</span>
+<span class="keyword">Response:</span> { categories: { head: [...], face: [...], ... } }
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <span class="endpoint-method method-post">POST</span>
+                <div class="endpoint-path">/avatar/generate</div>
+                <p class="text-sm" style="margin-bottom: var(--spacer-3); color: rgb(var(--color) / 0.7);">
+                    Generate an avatar with specific component selection
+                </p>
+                <div class="code-block" style="margin: 0;">
+<span class="comment">// Body Parameters (JSON)</span>
+{
+  <span class="string">"head"</span>: <span class="keyword">0</span>,           <span class="comment">// Index of head style</span>
+  <span class="string">"face"</span>: <span class="keyword">0</span>,           <span class="comment">// Index of face expression</span>
+  <span class="string">"body"</span>: <span class="keyword">0</span>,           <span class="comment">// Index of body/clothing</span>
+  <span class="string">"facial_hair"</span>: <span class="keyword">0</span>,    <span class="comment">// Index of facial hair</span>
+  <span class="string">"accessories"</span>: <span class="keyword">0</span>     <span class="comment">// Index of accessories</span>
+}
+
+<span class="comment">// Response</span>
+{ <span class="string">"key"</span>: <span class="string">"0e64267e"</span>, <span class="string">"svg"</span>: <span class="string">"&lt;svg...&gt;"</span> }
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <span class="endpoint-method method-get">GET</span>
+                <div class="endpoint-path">/avatar/{key}</div>
+                <p class="text-sm" style="margin-bottom: var(--spacer-3); color: rgb(var(--color) / 0.7);">
+                    Retrieve a previously generated avatar by its key
+                </p>
+                <div class="code-block" style="margin: 0;">
+<span class="comment">// Path Parameter</span>
+key: <span class="string">"0e64267e"</span>  <span class="comment">// The avatar key from generate</span>
+
+<span class="comment">// Response</span>
+{ <span class="string">"key"</span>: <span class="string">"0e64267e"</span>, <span class="string">"svg"</span>: <span class="string">"&lt;svg...&gt;"</span> }
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <span class="endpoint-method method-get">GET</span>
+                <div class="endpoint-path">/avatar/random</div>
+                <p class="text-sm" style="margin-bottom: var(--spacer-3); color: rgb(var(--color) / 0.7);">
+                    Generate a random avatar with random component selection
+                </p>
+                <div class="code-block" style="margin: 0;">
+<span class="comment">// No parameters required</span>
+
+<span class="comment">// Response</span>
+{ <span class="string">"key"</span>: <span class="string">"7ce711ed"</span>, <span class="string">"svg"</span>: <span class="string">"&lt;svg...&gt;"</span> }
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Self-Contained</h3>
+                    <p>Single JavaScript file with no dependencies</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Simple API</h3>
+                    <p>Easy to use with minimal configuration</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Customizable</h3>
+                    <p>Stepper navigation for quick selection</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Fast Loading</h3>
+                    <p>Lightweight and optimized performance</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Responsive</h3>
+                    <p>Works perfectly on all screen sizes</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3>Event-Driven</h3>
+                    <p>Custom events for easy integration</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>
+                Built with FastAPI |
+                Powerful avatar resources from <a href="https://www.openpeeps.com/" target="_blank">Open Peeps</a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="avatar-builder.js"></script>
+
+    <script>
+        const builder = document.querySelector('avatar-builder');
+        const eventLog = document.getElementById('eventLog');
+
+        eventLog.innerHTML = '';
+
+        builder.addEventListener('avatar-generated', (event) => {
+            const timestamp = new Date().toLocaleTimeString();
+            const logItem = document.createElement('div');
+            logItem.className = 'event-log-item';
+            logItem.innerHTML = `
+                <span class="timestamp">[${timestamp}]</span>
+                Avatar generated: <span class="key">${event.detail.key}</span>
+            `;
+            eventLog.insertBefore(logItem, eventLog.firstChild);
+
+            while (eventLog.children.length > 15) {
+                eventLog.removeChild(eventLog.lastChild);
+            }
+        });
+
+        console.log('Open Peeps Avatar Builder loaded!');
+        console.log('Component methods:', {
+            getAvatarKey: builder.getAvatarKey,
+            getAvatarSVG: builder.getAvatarSVG,
+            setSelection: builder.setSelection
+        });
+    </script>
+</body>
+</html>

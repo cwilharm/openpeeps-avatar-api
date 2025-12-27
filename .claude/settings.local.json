@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(for dir in \"Separate Atoms\"/*)",
+      "Bash(do if [ -d \"$dir\" ])",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(python -m pip install:*)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(pkill:*)",
+      "Bash(python test_api.py:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill -9)",
+      "Bash(open playground.html)"
+    ]
+  }
+}
