@@ -1,14 +1,16 @@
-# Avatar Generator API
+# Open Peeps Avatar Generator API
 
-A simple FastAPI application for building customizable profile picture avatars by combining face components.
+A simple FastAPI application for building customizable profile picture avatars by combining face components. Includes a ready-to-use Web Component for easy frontend integration.
 
 ## Features
 
-- Generate bust-style avatar profile pictures
-- Combine components: head/hair, face expression, body/clothing, facial hair, and accessories
-- Compact hash-based keys for easy avatar retrieval
-- Random avatar generation
-- SVG output for scalable, high-quality images
+- 🎨 Generate bust-style avatar profile pictures
+- 🧩 Combine components: head/hair, face expression, body/clothing, facial hair, and accessories
+- 🔑 Compact hash-based keys for easy avatar retrieval
+- 🎲 Random avatar generation
+- 📐 SVG output for scalable, high-quality images
+- 📦 **Web Component** - Drop-in component for instant integration
+- 🚀 FastAPI with automatic OpenAPI documentation
 
 ## Installation
 
@@ -23,6 +25,63 @@ python main.py
 ```
 
 The API will be available at `http://localhost:8000`
+
+## Web Component
+
+### Quick Start
+
+The easiest way to use the avatar generator in your web application is with our Web Component.
+
+#### 1. Include the script from the API
+
+```html
+<script src="http://localhost:8000/avatar-builder.js"></script>
+```
+
+#### 2. Use the component
+
+```html
+<avatar-builder api-url="http://localhost:8000"></avatar-builder>
+```
+
+That's it! The component will automatically load and display an interactive avatar builder.
+
+### Component Features
+
+- **Stepper Navigation** - Easy left/right navigation through options
+- **Live Preview** - See your avatar update in real-time
+- **Random Generator** - Generate random avatars with one click
+- **Event System** - Listen to avatar generation events
+- **Compact Design** - Clean, minimal interface that fits anywhere
+
+### Component API
+
+```javascript
+const builder = document.querySelector('avatar-builder');
+
+// Listen to events
+builder.addEventListener('avatar-generated', (event) => {
+    console.log('Key:', event.detail.key);
+    console.log('SVG:', event.detail.svg);
+});
+
+// Get current avatar
+const key = builder.getAvatarKey();
+const svg = builder.getAvatarSVG();
+
+// Set specific selection
+builder.setSelection({
+    head: 5,
+    face: 25,
+    body: 10,
+    facial_hair: 0,
+    accessories: 2
+});
+```
+
+### Component Demo
+
+Open `component-demo.html` in your browser to see the Web Component in action with a full interactive demo.
 
 ## API Endpoints
 
@@ -97,6 +156,25 @@ Generates a random avatar by randomly selecting components from each category.
   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\"..."
 }
 ```
+
+### 5. Get Web Component
+```
+GET /avatar-builder.js
+```
+
+Serves the avatar-builder Web Component JavaScript file for direct inclusion in HTML.
+
+**Usage:**
+```html
+<script src="http://localhost:8000/avatar-builder.js"></script>
+```
+
+### 6. API Documentation
+```
+GET /docs
+```
+
+Interactive Swagger UI documentation for testing all API endpoints.
 
 ## Usage Examples
 
@@ -185,31 +263,54 @@ curl http://localhost:8000/avatar/random
 ## Technical Details
 
 - **Framework**: FastAPI
+- **Web Component**: Custom Element using Shadow DOM
 - **Output Format**: SVG (Scalable Vector Graphics)
 - **Image Dimensions**: 1136px × 1533px (bust portrait)
 - **Key Format**: 8-character hash (e.g., "0e64267e")
 - **CORS**: Enabled for all origins (customize in production)
 
-## Frontend Integration
+## Integration Options
 
-The API is designed for easy frontend integration:
+### Option 1: Web Component (Recommended)
 
-1. Fetch options and display component selectors
-2. Send user selection to generate endpoint
-3. Display the returned SVG directly in your HTML
-4. Save the key for later retrieval
+The easiest way to integrate is using the Web Component:
 
-Example HTML:
 ```html
-<div id="avatar-container">
-  <!-- SVG will be injected here -->
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My App</title>
+    <script src="http://localhost:8000/avatar-builder.js"></script>
+</head>
+<body>
+    <avatar-builder api-url="http://localhost:8000"></avatar-builder>
+</body>
+</html>
+```
 
-<script>
-const response = await fetch('http://localhost:8000/avatar/random');
-const avatar = await response.json();
+### Option 2: Direct API Integration
+
+Use the REST API directly for custom implementations:
+
+```javascript
+// Fetch options and display component selectors
+const options = await fetch('http://localhost:8000/options').then(r => r.json());
+
+// Send user selection to generate endpoint
+const avatar = await fetch('http://localhost:8000/avatar/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        head: 5,
+        face: 25,
+        body: 10,
+        facial_hair: 0,
+        accessories: 2
+    })
+}).then(r => r.json());
+
+// Display the returned SVG
 document.getElementById('avatar-container').innerHTML = avatar.svg;
-</script>
 ```
 
 ## Testing
@@ -219,12 +320,26 @@ Run the test suite:
 python test_api.py
 ```
 
+## Files
+
+- `main.py` - FastAPI backend application
+- `avatar-builder.js` - Web Component for frontend integration
+- `component-demo.html` - Interactive demo page
+- `playground.html` - Full-featured playground with grid selection
+- `requirements.txt` - Python dependencies
+- `test_api.py` - API test suite
+
 ## Notes
 
 - The in-memory key mapping is suitable for development. For production, use a database to persist avatar keys.
 - SVG output can be directly embedded in HTML or saved as .svg files.
 - The API uses CORS middleware to allow cross-origin requests.
+- The Web Component uses Shadow DOM for style encapsulation.
+
+## Credits
+
+Avatar resources are from [Open Peeps](https://www.openpeeps.com/) by Pablo Stanley, available under a free license.
 
 ## License
 
-This project uses avatar components from the "Separate Atoms" collection.
+MIT License - See avatar resources license at [openpeeps.com](https://www.openpeeps.com/)

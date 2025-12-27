@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import xml.etree.ElementTree as ET
 
@@ -169,15 +170,33 @@ key_mapping: Dict[str, AvatarSelection] = {}
 async def root():
     """Root endpoint with API information."""
     return {
-        "message": "Avatar Generator API",
+        "message": "Open Peeps Avatar Generator API",
         "version": "1.0.0",
         "endpoints": {
             "options": "/options",
             "generate": "/avatar/generate",
             "get_avatar": "/avatar/{key}",
-            "random": "/avatar/random"
+            "random": "/avatar/random",
+            "web_component": "/avatar-builder.js",
+            "docs": "/docs"
         }
     }
+
+
+@app.get("/avatar-builder.js")
+async def get_web_component():
+    """Serve the avatar-builder Web Component JavaScript file."""
+    js_file = Path("avatar-builder.js")
+    if not js_file.exists():
+        raise HTTPException(status_code=404, detail="Web component file not found")
+    return FileResponse(
+        js_file,
+        media_type="application/javascript",
+        headers={
+            "Cache-Control": "public, max-age=3600",
+            "Access-Control-Allow-Origin": "*"
+        }
+    )
 
 
 @app.get("/options")
